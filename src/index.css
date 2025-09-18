@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Educational Platform Design System - Modern, Clean, Professional */
+
+@layer base {
+  :root {
+    /* Core Background & Text */
+    --background: 240 10% 97%;
+    --foreground: 240 10% 15%;
+
+    /* Card & Surface Colors */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 15%;
+
+    /* Interactive Elements */
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 15%;
+
+    /* Primary Brand - Professional Blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 217 91% 55%;
+    --primary-glow: 217 91% 75%;
+
+    /* Secondary - Soft Purple */
+    --secondary: 262 52% 47%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 262 52% 42%;
+
+    /* Success - Educational Green */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 76% 90%;
+    --success-border: 142 76% 50%;
+
+    /* Error - Clear Red */
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 100%;
+    --error-light: 0 84% 95%;
+    --error-border: 0 84% 70%;
+
+    /* Neutral Tones */
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 10% 15%;
+
+    /* Form Elements */
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 217 91% 60%;
+
+    /* Destructive (keeping existing) */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(262 52% 47%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 45%));
+    --gradient-background: linear-gradient(180deg, hsl(240 10% 97%), hsl(240 15% 95%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(240 5% 98%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(240 5% 84% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(240 5% 84% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(240 5% 84% / 0.1);
+    --shadow-glow: 0 0 20px hsl(217 91% 60% / 0.15);
+    --shadow-success: 0 4px 12px hsl(142 76% 36% / 0.2);
+    --shadow-error: 0 4px 12px hsl(0 84% 60% / 0.2);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 240 5% 95%;
+
+    --card: 240 10% 12%;
+    --card-foreground: 240 5% 95%;
+
+    --popover: 240 10% 12%;
+    --popover-foreground: 240 5% 95%;
+
+    --primary: 217 91% 65%;
+    --primary-foreground: 240 10% 8%;
+    --primary-hover: 217 91% 70%;
+
+    --secondary: 262 52% 52%;
+    --secondary-foreground: 240 10% 8%;
+
+    --success: 142 76% 40%;
+    --success-light: 142 76% 15%;
+    --success-border: 142 76% 45%;
+
+    --error: 0 84% 65%;
+    --error-light: 0 84% 15%;
+    --error-border: 0 84% 60%;
+
+    --muted: 240 8% 15%;
+    --muted-foreground: 240 5% 65%;
+
+    --accent: 240 8% 15%;
+    --accent-foreground: 240 5% 95%;
+
+    --border: 240 8% 20%;
+    --input: 240 8% 20%;
+    --ring: 217 91% 65%;
+
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 240 10% 8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: var(--gradient-background);
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-lg;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-success {
+    box-shadow: var(--shadow-success);
+  }
+
+  .shadow-error {
+    box-shadow: var(--shadow-error);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+}
