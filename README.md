@@ -2,13 +2,18 @@
 
 **AI-Powered Practice Test Generator** - Transform your study materials into interactive practice tests instantly!
 
-![Parse & Practice](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Vite](https://img.shields.io/badge/Vite-5-purple) ![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge&logo=vercel)](https://kinshukkush.github.io/PARSE-N-PRACTICE/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/kinshukkush/PARSE-N-PRACTICE)
+
+![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Vite](https://img.shields.io/badge/Vite-5-purple) ![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan) ![OpenRouter](https://img.shields.io/badge/OpenRouter-AI-orange)
+
+**🌐 Live App**: [https://kinshukkush.github.io/PARSE-N-PRACTICE/](https://kinshukkush.github.io/PARSE-N-PRACTICE/)
 
 ---
 
 ## ✨ Features
 
-- 🤖 **AI-Powered Analysis** - Automatically detects questions and answers from any text using Puter.js AI
+- 🤖 **AI-Powered Analysis** - Automatically detects questions and answers from any text using OpenRouter AI
 - ⚡ **Instant Test Generation** - Convert study materials to practice tests in seconds
 - 📊 **Smart Progress Tracking** - Track your performance with detailed analytics
 - 🎯 **Timed Practice Mode** - Simulate real exam conditions with customizable timers
@@ -30,8 +35,8 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/parse-n-practice.git
-cd parse-n-practice
+git clone https://github.com/kinshukkush/PARSE-N-PRACTICE.git
+cd PARSE-N-PRACTICE
 ```
 
 2. **Install dependencies**
@@ -70,7 +75,7 @@ npm run preview
 1. **Update `vite.config.ts`** with your repository name:
 ```typescript
 export default defineConfig({
-  base: '/your-repo-name/',
+  base: '/PARSE-N-PRACTICE/',
   // ... rest of config
 })
 ```
@@ -82,7 +87,7 @@ cd dist
 git init
 git add -A
 git commit -m 'Deploy to GitHub Pages'
-git push -f git@github.com:yourusername/your-repo-name.git main:gh-pages
+git push -f git@github.com:kinshukkush/PARSE-N-PRACTICE.git main:gh-pages
 ```
 
 3. **Enable GitHub Pages** in your repository settings (Settings → Pages → Source: gh-pages branch)
@@ -145,7 +150,7 @@ jobs:
 - **Frontend Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS + shadcn/ui components
-- **AI**: Puter.js (free AI API)
+- **AI**: OpenRouter (GPT-3.5 Turbo)
 - **State Management**: Zustand
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
@@ -165,7 +170,7 @@ parse-n-practice/
 │   ├── hooks/            # Custom React hooks
 │   ├── lib/              # Utilities and services
 │   │   ├── parser.ts     # Question parsing logic
-│   │   ├── aiService.ts  # Puter.js AI integration
+│   │   ├── aiService.ts  # OpenRouter AI integration
 │   │   └── utils.ts
 │   ├── pages/            # Page components
 │   ├── App.tsx           # Main app component
@@ -198,16 +203,26 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Acknowledgments
 
-- [Puter.js](https://puter.com) - Free AI API
+- [OpenRouter](https://openrouter.ai/) - Unified AI API
 - [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI components
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Lucide](https://lucide.dev/) - Beautiful icons
 
 ---
 
+## � Links
+
+- **Live Demo**: [https://kinshukkush.github.io/PARSE-N-PRACTICE/](https://kinshukkush.github.io/PARSE-N-PRACTICE/)
+- **Repository**: [https://github.com/kinshukkush/PARSE-N-PRACTICE](https://github.com/kinshukkush/PARSE-N-PRACTICE)
+- **Issues**: [Report a bug or request a feature](https://github.com/kinshukkush/PARSE-N-PRACTICE/issues)
+
+---
+
 ## 📧 Contact
 
-Questions or suggestions? Feel free to open an issue or reach out!
+Questions or suggestions? Feel free to [open an issue](https://github.com/kinshukkush/PARSE-N-PRACTICE/issues) or reach out!
+
+**Developer**: [@kinshuk._.saxena](https://github.com/kinshukkush)
 
 ---
 

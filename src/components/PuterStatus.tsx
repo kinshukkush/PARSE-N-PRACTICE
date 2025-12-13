@@ -2,27 +2,13 @@ import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export function PuterStatus() {
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('ready');
 
   useEffect(() => {
-    let attempts = 0;
-    const maxAttempts = 30;
-    
-    const checkPuter = setInterval(() => {
-      attempts++;
-      
-      if (typeof puter !== 'undefined' && puter?.ai) {
-        console.log('✅ Puter.js is ready!');
-        setStatus('ready');
-        clearInterval(checkPuter);
-      } else if (attempts >= maxAttempts) {
-        console.error('❌ Puter.js failed to load');
-        setStatus('error');
-        clearInterval(checkPuter);
-      }
-    }, 200);
-
-    return () => clearInterval(checkPuter);
+    // Don't test API on mount to save quota
+    // API will be tested when user actually uses it
+    console.log('✅ OpenRouter AI configured and ready to use');
+    setStatus('ready');
   }, []);
 
   if (status === 'loading') {
@@ -46,7 +32,7 @@ export function PuterStatus() {
   return (
     <div className="flex items-center gap-2 text-green-400 text-xs">
       <CheckCircle className="h-3 w-3" />
-      <span>AI Ready</span>
+      <span>AI Ready (OpenRouter)</span>
     </div>
   );
 }

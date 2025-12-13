@@ -1,5 +1,8 @@
-// AI Service using Puter.js for free OpenAI API access
-// puter is loaded globally from the Puter.js script in index.html
+// AI Service using OpenRouter API
+
+const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const OPENROUTER_MODEL = 'openai/gpt-3.5-turbo'; // Fast and cost-effective model
 
 export interface AIQuestion {
   question: string;
@@ -16,66 +19,64 @@ export interface AIAnalysisResult {
 }
 
 /**
- * Wait for Puter.js to be loaded and ensure user is authenticated
+ * Call OpenRouter API with error handling
  */
-async function waitForPuter(maxAttempts = 30): Promise<boolean> {
-  // Wait for Puter.js to load
-  for (let i = 0; i < maxAttempts; i++) {
-    if (typeof puter !== 'undefined' && puter?.ai) {
-      console.log('✅ Puter.js loaded successfully');
-      break;
-    }
-    console.log(`⏳ Waiting for Puter.js... (${i + 1}/${maxAttempts})`);
-    await new Promise(resolve => setTimeout(resolve, 200));
-  }
-
-  if (typeof puter === 'undefined' || !puter?.ai) {
-    console.error('❌ Puter.js failed to load');
-    return false;
-  }
-
-  console.log('📋 Puter object available:', {
-    hasAI: !!puter.ai,
-    hasAuth: !!puter.auth,
-    aiType: typeof puter.ai,
-    authType: typeof puter.auth
-  });
-
-  // Test the API - if not authenticated, Puter will prompt automatically
+async function callOpenRouterAPI(prompt: string, retryCount = 0): Promise<string> {
+  const maxRetries = 2;
+  
   try {
-    console.log('🧪 Testing Puter.ai API...');
-    console.log('Making test API call (using default model)...');
+    const response = await fetch(OPENROUTER_API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://kinshukkush.github.io/PARSE-N-PRACTICE/',
+        'X-Title': 'Parse & Practice',
+      },
+      body: JSON.stringify({
+        model: OPENROUTER_MODEL,
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: { message: response.statusText } }));
+      
+      // Handle rate limit errors
+      if (response.status === 429) {
+        console.error('❌ OpenRouter API rate limit exceeded');
+        throw new Error('API rate limit exceeded. Please try again in a moment.');
+      }
+      
+      console.error('❌ OpenRouter API error:', errorData);
+      throw new Error(errorData?.error?.message || `API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
     
-    // Try without specifying model - let Puter use default
-    const testResponse = await puter.ai.chat('Say "OK"');
+    // Extract text from OpenRouter response (OpenAI-compatible format)
+    if (data.choices && data.choices[0]?.message?.content) {
+      return data.choices[0].message.content;
+    } else {
+      console.error('❌ Unexpected OpenRouter response structure:', data);
+      throw new Error('Unexpected response structure from OpenRouter API');
+    }
+  } catch (error) {
+    console.error('❌ OpenRouter API call failed:', error);
     
-    console.log('✅ Puter.ai API test successful!');
-    console.log('Response type:', typeof testResponse);
-    console.log('Response value:', testResponse);
-    return true;
-  } catch (error: any) {
-    console.error('❌ API test failed!');
-    console.error('Full error object:', error);
-    console.error('Error type:', typeof error);
-    console.error('Error keys:', error ? Object.keys(error) : 'null');
-    
-    if (error && typeof error === 'object') {
-      console.error('Error properties:', {
-        success: error.success,
-        error: error.error,
-        message: error.message,
-        name: error.name,
-        stack: error.stack
-      });
+    // Retry logic for network errors (but not for rate limits)
+    if (retryCount < maxRetries && error instanceof TypeError) {
+      console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+      return callOpenRouterAPI(prompt, retryCount + 1);
     }
     
-    // If error indicates auth needed, show helpful message
-    if (error?.error?.includes('auth') || error?.message?.includes('auth') || error?.error?.includes('401')) {
-      console.error('⚠️ Authentication required. Please sign in to Puter first.');
-      alert('To use AI features, you need to sign in to Puter.\n\nPlease visit https://puter.com and create a free account, then refresh this page.');
-    }
-    
-    return false;
+    throw error;
   }
 }
 
@@ -84,26 +85,9 @@ async function waitForPuter(maxAttempts = 30): Promise<boolean> {
  */
 export async function analyzeTextWithAI(text: string): Promise<AIAnalysisResult> {
   console.log('🔍 Starting AI analysis...');
-  
-  // Wait for Puter.js to load
-  const puterReady = await waitForPuter();
-  if (!puterReady) {
-    throw new Error('Puter.js failed to load. Please refresh the page and try again.');
-  }
 
   try {
-    // Verify puter.ai is actually available
-    if (!puter || !puter.ai || typeof puter.ai.chat !== 'function') {
-      console.error('❌ Puter.ai API not available:', {
-        puterExists: typeof puter !== 'undefined',
-        aiExists: typeof puter?.ai !== 'undefined',
-        chatExists: typeof puter?.ai?.chat !== 'undefined'
-      });
-      throw new Error('Puter.ai API is not available');
-    }
-
-    console.log('✅ Puter.ai verified available');
-    console.log('📤 Sending analysis request to AI...');
+    console.log('📤 Sending analysis request to OpenRouter AI...');
     
     const prompt = `Analyze the following text and determine if it contains questions and answers.
 
@@ -124,57 +108,9 @@ If no questions found, set hasQuestions to false and provide a brief summary of 
 
 Respond ONLY with the JSON object, no additional text.`;
 
-    const response = await puter.ai.chat(prompt);
+    const responseText = await callOpenRouterAPI(prompt);
 
-    console.log('📥 Received analysis response:', response);
-    
-    // Extract text from response - handle different response formats
-    let responseText = '';
-    
-    if (typeof response === 'string') {
-      // Direct string response
-      responseText = response;
-    } else if (response && typeof response === 'object') {
-      // Check for async iterator (streaming response)
-      if (Symbol.asyncIterator in response) {
-        const chunks: string[] = [];
-        for await (const chunk of response as AsyncIterable<any>) {
-          chunks.push(String(chunk));
-        }
-        responseText = chunks.join('');
-      } else {
-        // Check common response object structures
-        console.log('Response keys:', Object.keys(response));
-        
-        // Try various possible structures
-        if (response.choices && Array.isArray(response.choices) && response.choices[0]?.message?.content) {
-          // OpenAI-like structure
-          responseText = response.choices[0].message.content;
-        } else if (response.message && typeof response.message === 'object' && response.message.content) {
-          // Nested message.content structure
-          responseText = response.message.content;
-        } else if (typeof response.message === 'string') {
-          // Direct message string
-          responseText = response.message;
-        } else if (response.text) {
-          responseText = response.text;
-        } else if (response.content) {
-          responseText = response.content;
-        } else if (response.response) {
-          responseText = response.response;
-        } else if (response.data) {
-          responseText = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-        } else if (response.result) {
-          responseText = response.result;
-        } else {
-          // Fallback: stringify the entire response
-          console.warn('Unknown response structure, stringifying entire object');
-          responseText = JSON.stringify(response);
-        }
-      }
-    }
-    
-    console.log('Extracted text:', responseText);
+    console.log('📥 Received analysis response');
     
     // Parse the AI response
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -204,17 +140,11 @@ Respond ONLY with the JSON object, no additional text.`;
  */
 export async function extractQuestionsWithAI(text: string, maxQuestions?: number): Promise<AIQuestion[]> {
   console.log('📝 Starting question extraction...');
-  
-  // Wait for Puter.js to load
-  const puterReady = await waitForPuter();
-  if (!puterReady) {
-    throw new Error('Puter.js failed to load. Please refresh the page and try again.');
-  }
 
   try {
     const questionLimit = maxQuestions ? `Extract exactly ${maxQuestions} questions.` : 'Extract all questions you can find.';
     
-    console.log('📤 Sending extraction request to AI...');
+    console.log('📤 Sending extraction request to OpenRouter AI...');
     
     const prompt = `Extract questions from the following text and convert them ALL to multiple-choice format. ${questionLimit}
 
@@ -259,49 +189,9 @@ Output: [{
 
 Respond ONLY with the JSON array.`;
 
-    const response = await puter.ai.chat(prompt);
+    const responseText = await callOpenRouterAPI(prompt);
 
     console.log('📥 Received extraction response');
-    console.log('Response type:', typeof response);
-    
-    // Extract text from response object - handle different response formats
-    let responseText = '';
-    if (typeof response === 'string') {
-      responseText = response;
-    } else if (response && typeof response === 'object') {
-      // Check for async iterator (streaming response)
-      if (Symbol.asyncIterator in response) {
-        const chunks: string[] = [];
-        for await (const chunk of response as AsyncIterable<any>) {
-          chunks.push(String(chunk));
-        }
-        responseText = chunks.join('');
-      } else {
-        // Check common response object structures
-        if (response.choices && Array.isArray(response.choices) && response.choices[0]?.message?.content) {
-          responseText = response.choices[0].message.content;
-        } else if (response.message && typeof response.message === 'object' && response.message.content) {
-          responseText = response.message.content;
-        } else if (typeof response.message === 'string') {
-          responseText = response.message;
-        } else if (response.text) {
-          responseText = response.text;
-        } else if (response.content) {
-          responseText = response.content;
-        } else if (response.response) {
-          responseText = response.response;
-        } else if (response.data) {
-          responseText = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-        } else if (response.result) {
-          responseText = response.result;
-        } else {
-          console.warn('Unknown response structure:', Object.keys(response));
-          responseText = JSON.stringify(response);
-        }
-      }
-    }
-    
-    console.log('Extracted response text:', responseText.substring(0, 200));
     
     // Extract JSON from response - handle both raw JSON and markdown code blocks
     let jsonText = responseText;
@@ -312,7 +202,7 @@ Respond ONLY with the JSON array.`;
     // Extract JSON array
     const jsonMatch = jsonText.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {
-      console.error('Invalid AI response format:', response);
+      console.error('Invalid AI response format:', responseText);
       throw new Error("Could not find JSON array in AI response");
     }
 
@@ -365,12 +255,6 @@ Respond ONLY with the JSON array.`;
  */
 export async function chatWithAI(userMessage: string, context: string): Promise<string> {
   console.log('💬 Starting AI chat...');
-  
-  // Wait for Puter.js to load
-  const puterReady = await waitForPuter();
-  if (!puterReady) {
-    throw new Error('Puter.js failed to load. Please refresh the page and try again.');
-  }
 
   try {
     const prompt = `You are a helpful AI assistant. The user has uploaded some content and wants to discuss it with you.
@@ -384,50 +268,11 @@ User message: ${userMessage}
 
 Provide a helpful, informative response based on the content provided.`;
 
-    console.log('📤 Sending chat message to AI...');
+    console.log('📤 Sending chat message to OpenRouter AI...');
     
-    const response = await puter.ai.chat(prompt);
+    const responseText = await callOpenRouterAPI(prompt);
 
     console.log('✅ Chat response received');
-    
-    // Extract text from response object - handle different response formats
-    let responseText = '';
-    if (typeof response === 'string') {
-      responseText = response;
-    } else if (response && typeof response === 'object') {
-      // Check for async iterator (streaming response)
-      if (Symbol.asyncIterator in response) {
-        const chunks: string[] = [];
-        for await (const chunk of response as AsyncIterable<any>) {
-          chunks.push(String(chunk));
-        }
-        responseText = chunks.join('');
-      } else {
-        // Check common response object structures
-        if (response.choices && Array.isArray(response.choices) && response.choices[0]?.message?.content) {
-          responseText = response.choices[0].message.content;
-        } else if (response.message && typeof response.message === 'object' && response.message.content) {
-          responseText = response.message.content;
-        } else if (typeof response.message === 'string') {
-          responseText = response.message;
-        } else if (response.text) {
-          responseText = response.text;
-        } else if (response.content) {
-          responseText = response.content;
-        } else if (response.response) {
-          responseText = response.response;
-        } else if (response.data) {
-          responseText = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-        } else if (response.result) {
-          responseText = response.result;
-        } else {
-          console.warn('Unknown response structure:', Object.keys(response));
-          responseText = String(response);
-        }
-      }
-    } else {
-      responseText = String(response);
-    }
     
     return responseText;
   } catch (error) {
@@ -438,15 +283,10 @@ Provide a helpful, informative response based on the content provided.`;
 
 /**
  * Stream chat responses for longer conversations
+ * Note: OpenRouter supports streaming, but for simplicity we're using regular response
  */
 export async function* streamChatWithAI(userMessage: string, context: string): AsyncGenerator<string> {
   console.log('💬 Starting AI chat stream...');
-  
-  // Wait for Puter.js to load
-  const puterReady = await waitForPuter();
-  if (!puterReady) {
-    throw new Error('Puter.js failed to load. Please refresh the page and try again.');
-  }
 
   try {
     const prompt = `You are a helpful AI assistant. The user has uploaded some content and wants to discuss it with you.
@@ -460,18 +300,11 @@ User message: ${userMessage}
 
 Provide a helpful, informative response based on the content provided.`;
 
-    const response = await puter.ai.chat(prompt, { 
-      model: "gpt-5-nano",
-      stream: true,
-      temperature: 0.7,
-      max_tokens: 1000
-    });
-
-    for await (const part of response) {
-      if (part?.text) {
-        yield part.text;
-      }
-    }
+    const response = await callOpenRouterAPI(prompt);
+    
+    // For now, yield the entire response at once
+    // To implement true streaming, we would need to use the streaming endpoint
+    yield response;
     
     console.log('✅ Chat stream complete');
   } catch (error) {
