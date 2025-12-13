@@ -35,7 +35,7 @@ interface TestState {
   submitTest: () => void;
   resetTest: () => void;
   shuffleQuestions: () => void;
-  
+
   // Utility
   getAnswerForQuestion: (questionId: string) => UserAnswer | undefined;
   isQuestionAnswered: (questionId: string) => boolean;
@@ -45,14 +45,13 @@ interface TestState {
 export const useTestStore = create<TestState>()(
   persist(
     (set, get) => ({
-      // Initial state
-  currentTest: null,
-  originalQuestions: null,
-  userAnswers: [],
-  currentQuestionIndex: 0,
-  isTestStarted: false,
-  isTestCompleted: false,
-  testResult: null,
+      currentTest: null,
+      originalQuestions: null,
+      userAnswers: [],
+      currentQuestionIndex: 0,
+      isTestStarted: false,
+      isTestCompleted: false,
+      testResult: null,
 
       // Set the current test
       setTest: (test: ParsedTest) => {
@@ -89,15 +88,17 @@ export const useTestStore = create<TestState>()(
           selectedOption,
         };
 
-        if (existingAnswerIndex >= 0) {
-          // Update existing answer
-          const updatedAnswers = [...currentAnswers];
-          updatedAnswers[existingAnswerIndex] = newAnswer;
-          set({ userAnswers: updatedAnswers });
-        } else {
-          // Add new answer
-          set({ userAnswers: [...currentAnswers, newAnswer] });
-        }
+        // Helper function to update or add answer
+        const updateUserAnswers = (answers: UserAnswer[]) => {
+          if (existingAnswerIndex >= 0) {
+            answers[existingAnswerIndex] = newAnswer; // Update answer
+          } else {
+            answers.push(newAnswer); // Add new answer
+          }
+          set({ userAnswers: answers });
+        };
+
+        updateUserAnswers(currentAnswers);
       },
 
       // Navigate to specific question
@@ -150,6 +151,7 @@ export const useTestStore = create<TestState>()(
           isTestStarted: false,
           isTestCompleted: false,
           testResult: null,
+          originalQuestions: get().originalQuestions, // Reset original questions as well
         });
       },
 
@@ -158,17 +160,12 @@ export const useTestStore = create<TestState>()(
         const test = get().currentTest;
         if (!test) return;
 
-        // If original test had more than 20 questions, always shuffle from all
         const allQuestions = test.questions.length > 20 && test.title?.includes('Randomized')
           ? test.questions
-          : (get().originalQuestions || test.questions);
+          : get().originalQuestions || test.questions;
 
-        // Pick 20 random questions if more than 20
-        let shuffledQuestions = [...allQuestions];
-        shuffledQuestions = shuffledQuestions.sort(() => Math.random() - 0.5);
-        if (shuffledQuestions.length > 20) {
-          shuffledQuestions = shuffledQuestions.slice(0, 20);
-        }
+        // Shuffle logic with random selection of 20 questions
+        const shuffledQuestions = [...allQuestions].sort(() => Math.random() - 0.5).slice(0, 20);
         set({
           currentTest: {
             ...test,

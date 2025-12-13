@@ -1,73 +1,216 @@
-# Welcome to your Lovable project
+# 🧠 Parse & Practice
 
-## Project info
+**AI-Powered Practice Test Generator** - Transform your study materials into interactive practice tests instantly!
 
-**URL**: https://lovable.dev/projects/340e98a1-e645-4a44-8a74-f8bd738332e6
+![Parse & Practice](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Vite](https://img.shields.io/badge/Vite-5-purple) ![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+- 🤖 **AI-Powered Analysis** - Automatically detects questions and answers from any text using Puter.js AI
+- ⚡ **Instant Test Generation** - Convert study materials to practice tests in seconds
+- 📊 **Smart Progress Tracking** - Track your performance with detailed analytics
+- 🎯 **Timed Practice Mode** - Simulate real exam conditions with customizable timers
+- 🏆 **Achievement System** - Earn badges and track your learning progress
+- 💬 **AI Chat Interface** - Discuss content that doesn't contain questions
+- 🎨 **Modern UI** - Beautiful, responsive interface built with Tailwind CSS and shadcn/ui
+- 📱 **Mobile Friendly** - Works seamlessly on all devices
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/340e98a1-e645-4a44-8a74-f8bd738332e6) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Quick Start
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (v18 or later)
+- npm or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/parse-n-practice.git
+cd parse-n-practice
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Install dependencies**
+```bash
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. **Start development server**
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📦 Build for Production
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run build
+```
 
-## What technologies are used for this project?
+The production build will be in the `dist/` directory.
 
-This project is built with:
+### Preview production build
+```bash
+npm run preview
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🌐 Deploy to GitHub Pages
 
-Simply open [Lovable](https://lovable.dev/projects/340e98a1-e645-4a44-8a74-f8bd738332e6) and click on Share -> Publish.
+### Option 1: Manual Deployment
 
-## Can I connect a custom domain to my Lovable project?
+1. **Update `vite.config.ts`** with your repository name:
+```typescript
+export default defineConfig({
+  base: '/your-repo-name/',
+  // ... rest of config
+})
+```
 
-Yes, you can!
+2. **Build and deploy**:
+```bash
+npm run build
+cd dist
+git init
+git add -A
+git commit -m 'Deploy to GitHub Pages'
+git push -f git@github.com:yourusername/your-repo-name.git main:gh-pages
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+3. **Enable GitHub Pages** in your repository settings (Settings → Pages → Source: gh-pages branch)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Option 2: Using GitHub Actions
+
+1. Create `.github/workflows/deploy.yml`:
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+```
+
+2. Push to GitHub - deployment will happen automatically!
+
+---
+
+## 🎯 How to Use
+
+1. **Upload or Paste Content**
+   - Drag & drop a `.txt` file, or
+   - Paste your study material directly
+
+2. **AI Analysis**
+   - Click "Analyze with AI"
+   - AI will detect questions and answers automatically
+   - Supports multiple formats: Q&A pairs, multiple choice, etc.
+
+3. **Take the Test**
+   - Answer questions one by one
+   - Get instant feedback
+   - Review your score and correct answers
+
+4. **Track Progress**
+   - View detailed analytics
+   - See your improvement over time
+   - Identify weak areas
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **AI**: Puter.js (free AI API)
+- **State Management**: Zustand
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+
+---
+
+## 📁 Project Structure
+
+```
+parse-n-practice/
+├── src/
+│   ├── components/        # React components
+│   │   ├── ui/           # shadcn/ui components
+│   │   ├── TestUpload.tsx
+│   │   ├── QuestionCard.tsx
+│   │   └── ...
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utilities and services
+│   │   ├── parser.ts     # Question parsing logic
+│   │   ├── aiService.ts  # Puter.js AI integration
+│   │   └── utils.ts
+│   ├── pages/            # Page components
+│   ├── App.tsx           # Main app component
+│   └── main.tsx          # Entry point
+├── public/               # Static assets
+├── index.html
+├── package.json
+└── vite.config.ts
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+## 🙏 Acknowledgments
+
+- [Puter.js](https://puter.com) - Free AI API
+- [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI components
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Lucide](https://lucide.dev/) - Beautiful icons
+
+---
+
+## 📧 Contact
+
+Questions or suggestions? Feel free to open an issue or reach out!
+
+---
+
+**Made with ❤️ by kinshuk._.saxena**
+
+*Transform your study materials into practice tests with the power of AI!*

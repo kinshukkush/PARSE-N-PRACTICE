@@ -1,3 +1,5 @@
+import { analyzeTextWithAI, extractQuestionsWithAI, AIQuestion } from './aiService';
+
 export interface Question {
   id: string;
   question: string;
@@ -9,6 +11,13 @@ export interface Question {
 export interface ParsedTest {
   questions: Question[];
   title?: string;
+}
+
+export interface AIParseResult {
+  hasQuestions: boolean;
+  questions?: Question[];
+  summary?: string;
+  totalQuestionsFound?: number;
 }
 
 /**
@@ -184,6 +193,45 @@ export function shuffleArray<T>(array: T[]): T[] {
  */
 export function exportTestAsJSON(test: ParsedTest): string {
   return JSON.stringify(test, null, 2);
+}
+
+/**
+ * Parse questions using AI - this is the main function to use
+ */
+export async function parseQuestionsWithAI(text: string, requestedCount?: number): Promise<AIParseResult> {
+  try {
+    // First, analyze the text to see if it contains questions
+    const analysis = await analyzeTextWithAI(text);
+    
+    if (!analysis.hasQuestions) {
+      // No questions found - return summary for chat mode
+      return {
+        hasQuestions: false,
+        summary: analysis.summary || "The uploaded content doesn't appear to contain questions and answers. You can chat with me about this content!",
+      };
+    }
+
+    // Extract questions using AI
+    const aiQuestions = await extractQuestionsWithAI(text, requestedCount);
+    
+    // Convert AI questions to our Question format
+    const questions: Question[] = aiQuestions.map((q, index) => ({
+      id: `q_${index + 1}`,
+      question: q.question,
+      options: q.options,
+      answer: q.answer,
+      answerIndex: q.answerIndex
+    }));
+
+    return {
+      hasQuestions: true,
+      questions: questions,
+      totalQuestionsFound: analysis.questionCount || questions.length
+    };
+  } catch (error) {
+    console.error("AI parsing error:", error);
+    throw error;
+  }
 }
 
 /**
