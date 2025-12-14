@@ -33,6 +33,15 @@ The Parse & Practice app requires an **OpenRouter API key** to power its AI feat
    - Give it a name (e.g., "Parse & Practice")
    - Copy the generated API key (it looks like `sk-or-v1-...`)
 4. **Important**: Save this key securely - you won't be able to see it again!
+5. **Verify the Key** (Optional but Recommended):
+   - Test your key immediately after creation to ensure it works
+   - You can test it with this command:
+     ```bash
+     curl https://openrouter.ai/api/v1/auth/key \
+       -H "Authorization: Bearer YOUR_API_KEY"
+     ```
+   - If the key is valid, you'll get a success response
+   - If you get "User not found" error, the key may be invalid or your account needs verification
 
 ---
 
@@ -167,11 +176,16 @@ If you want to deploy the app to GitHub Pages:
 - ❌ If deployment fails:
   - Check the **Actions** tab for error logs
   - Verify the secret name is exactly `VITE_OPENROUTER_API_KEY` (case-sensitive)
-  - Ensure the secret value is a valid OpenRouter API key
-- ❌ If the deployed site doesn't work:
-  - Check browser console for API errors
-  - Verify your OpenRouter account has credits
-  - Wait a few minutes for GitHub Pages to update
+  - Ensure the secret value is a valid OpenRouter API key (starts with `sk-or-v1-`)
+  - Make sure there are no extra spaces when pasting the key into GitHub Secrets
+- ❌ If the deployed site doesn't work or shows "User not found" error:
+  - Open browser console (F12) to see detailed error messages
+  - **Most common cause**: The API key in GitHub Secrets is invalid or has extra spaces
+  - **Solution**: Delete and recreate the GitHub Secret with a fresh copy of the key
+  - Verify your OpenRouter account is active at https://openrouter.ai/keys
+  - Check your OpenRouter account has credits/quota available
+  - Wait a few minutes for GitHub Pages to update after redeployment
+  - Try triggering a new deployment: Go to Actions → Deploy to GitHub Pages → Run workflow
 
 ---
 
@@ -260,11 +274,22 @@ Open the browser console (F12) and check for:
 - Check the variable name is exactly `VITE_OPENROUTER_API_KEY`
 - Restart the dev server after creating `.env`
 
-### Issue: "API request failed: 401"
+### Issue: "API request failed: 401" or "User not found"
 **Solution**: 
-- Your API key is invalid or incorrect
-- Get a new key from OpenRouter
-- Update `.env` or GitHub Secret
+- **Check your API key format**: The key should look like `sk-or-v1-...` (starts with `sk-or-v1-`)
+- **Verify the key is active**: Log in to [OpenRouter](https://openrouter.ai/keys) and check if the key exists and is active
+- **Check for extra spaces**: When pasting the key, make sure there are no leading/trailing spaces
+- **Verify your account**: Make sure your OpenRouter account is active and verified
+- **For GitHub Secrets**: 
+  - Delete the existing secret and recreate it
+  - Copy the key directly from OpenRouter without any extra characters
+  - The secret name must be exactly `VITE_OPENROUTER_API_KEY` (case-sensitive)
+- **Test the key**: Try using the key in a simple curl command to verify it works:
+  ```bash
+  curl https://openrouter.ai/api/v1/auth/key \
+    -H "Authorization: Bearer YOUR_API_KEY"
+  ```
+- **Create a new key**: If the issue persists, delete the old key and create a fresh one at [OpenRouter Keys](https://openrouter.ai/keys)
 
 ### Issue: "API rate limit exceeded"
 **Solution**: 
