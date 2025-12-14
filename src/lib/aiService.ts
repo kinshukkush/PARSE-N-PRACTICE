@@ -54,13 +54,16 @@ async function callOpenRouterAPI(prompt: string, retryCount = 0): Promise<string
       
       // Handle authentication errors (401)
       if (response.status === 401) {
-        console.error('❌ OpenRouter API authentication failed');
-        console.error('💡 Possible causes:');
-        console.error('   1. Invalid or expired API key');
-        console.error('   2. API key not properly set in environment variables');
-        console.error('   3. OpenRouter account not found or inactive');
-        console.error('   4. Extra spaces or formatting issues in the API key');
-        console.error('📝 To fix: Check your API key at https://openrouter.ai/keys');
+        const debugInfo = [
+          '❌ OpenRouter API authentication failed',
+          '💡 Possible causes:',
+          '   1. Invalid or expired API key',
+          '   2. API key not properly set in environment variables',
+          '   3. OpenRouter account not found or inactive',
+          '   4. Extra spaces or formatting issues in the API key',
+          '📝 To fix: Check your API key at https://openrouter.ai/keys'
+        ].join('\n');
+        console.error(debugInfo);
         throw new Error('Authentication failed. Please verify your OpenRouter API key is valid and active.');
       }
       
