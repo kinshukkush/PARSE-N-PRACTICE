@@ -35,7 +35,7 @@ The Parse & Practice app requires an **OpenRouter API key** to power its AI feat
 4. **Important**: Save this key securely - you won't be able to see it again!
 5. **Verify the Key** (Optional but Recommended):
    - Test your key immediately after creation to ensure it works
-   - You can test it with this command:
+   - You can test it with this command (replace `YOUR_API_KEY` with your actual key):
      ```bash
      curl https://openrouter.ai/api/v1/auth/key \
        -H "Authorization: Bearer YOUR_API_KEY"
@@ -284,7 +284,7 @@ Open the browser console (F12) and check for:
   - Delete the existing secret and recreate it
   - Copy the key directly from OpenRouter without any extra characters
   - The secret name must be exactly `VITE_OPENROUTER_API_KEY` (case-sensitive)
-- **Test the key**: Try using the key in a simple curl command to verify it works:
+- **Test the key**: Try using the key in a simple curl command to verify it works (replace `YOUR_API_KEY` with your actual key):
   ```bash
   curl https://openrouter.ai/api/v1/auth/key \
     -H "Authorization: Bearer YOUR_API_KEY"
