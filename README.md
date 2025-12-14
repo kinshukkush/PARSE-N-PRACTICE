@@ -11,6 +11,20 @@
 
 ---
 
+## 🔑 API Key Setup Required!
+
+**This app requires an OpenRouter API key to function.** Don't know where to add your API key? 
+
+👉 **[Read the Complete API Key Setup Guide →](SETUP.md)**
+
+The guide covers:
+- Where to get your free OpenRouter API key
+- How to set it up for local development
+- How to configure it for GitHub Pages deployment
+- Troubleshooting common issues
+
+---
+
 ## ✨ Features
 
 - 🤖 **AI-Powered Analysis** - Automatically detects questions and answers from any text using OpenRouter AI
@@ -45,7 +59,7 @@ cd PARSE-N-PRACTICE
 npm install
 ```
 
-3. **Set up environment variables**
+3. **Set up environment variables** 🔑
 ```bash
 # Copy the example env file
 cp .env.example .env
@@ -53,6 +67,8 @@ cp .env.example .env
 # Edit .env and add your OpenRouter API key
 # VITE_OPENROUTER_API_KEY=your_api_key_here
 ```
+
+📖 **Need help with API key setup?** See the **[Complete API Key Setup Guide](SETUP.md)** for detailed step-by-step instructions.
 
 4. **Start development server**
 ```bash
@@ -80,7 +96,7 @@ npm run preview
 
 ## 🌐 Deploy to GitHub Pages
 
-### Important: Set up GitHub Secrets
+### Important: Set up GitHub Secrets 🔑
 
 Before deploying, add your OpenRouter API key to GitHub Secrets:
 
@@ -90,6 +106,8 @@ Before deploying, add your OpenRouter API key to GitHub Secrets:
 4. Name: `VITE_OPENROUTER_API_KEY`
 5. Value: Your OpenRouter API key
 6. Click **Add secret**
+
+📖 **Need detailed deployment instructions?** See the **[Complete API Key Setup Guide](SETUP.md)** for step-by-step guidance with troubleshooting.
 
 ### Automated Deployment (Recommended)
 
