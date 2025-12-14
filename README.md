@@ -30,6 +30,7 @@
 
 - Node.js (v18 or later)
 - npm or yarn
+- OpenRouter API key (get one free at [openrouter.ai/keys](https://openrouter.ai/keys))
 
 ### Installation
 
@@ -44,12 +45,21 @@ cd PARSE-N-PRACTICE
 npm install
 ```
 
-3. **Start development server**
+3. **Set up environment variables**
+```bash
+# Copy the example env file
+cp .env.example .env
+
+# Edit .env and add your OpenRouter API key
+# VITE_OPENROUTER_API_KEY=your_api_key_here
+```
+
+4. **Start development server**
 ```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:8080`
+The app will be available at `http://localhost:5173`
 
 ---
 
@@ -70,17 +80,30 @@ npm run preview
 
 ## 🌐 Deploy to GitHub Pages
 
-### Option 1: Manual Deployment
+### Important: Set up GitHub Secrets
 
-1. **Update `vite.config.ts`** with your repository name:
-```typescript
-export default defineConfig({
-  base: '/PARSE-N-PRACTICE/',
-  // ... rest of config
-})
-```
+Before deploying, add your OpenRouter API key to GitHub Secrets:
 
-2. **Build and deploy**:
+1. Go to your repository on GitHub
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `VITE_OPENROUTER_API_KEY`
+5. Value: Your OpenRouter API key
+6. Click **Add secret**
+
+### Automated Deployment (Recommended)
+
+The repository is configured with GitHub Actions for automatic deployment:
+
+1. **Push to main branch** - deployment happens automatically
+2. **The workflow will**:
+   - Install dependencies
+   - Build the project with your API key
+   - Deploy to GitHub Pages
+
+### Manual Deployment
+
+1. **Build and deploy**:
 ```bash
 npm run build
 cd dist
@@ -90,35 +113,7 @@ git commit -m 'Deploy to GitHub Pages'
 git push -f git@github.com:kinshukkush/PARSE-N-PRACTICE.git main:gh-pages
 ```
 
-3. **Enable GitHub Pages** in your repository settings (Settings → Pages → Source: gh-pages branch)
-
-### Option 2: Using GitHub Actions
-
-1. Create `.github/workflows/deploy.yml`:
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm ci
-      - run: npm run build
-      - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-```
-
-2. Push to GitHub - deployment will happen automatically!
+2. **Enable GitHub Pages** in your repository settings (Settings → Pages → Source: gh-pages branch)
 
 ---
 

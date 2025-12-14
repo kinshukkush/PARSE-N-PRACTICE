@@ -1,8 +1,13 @@
 // AI Service using OpenRouter API
 
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || '';
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OPENROUTER_MODEL = 'openai/gpt-3.5-turbo'; // Fast and cost-effective model
+
+// Validate API key on module load
+if (!OPENROUTER_API_KEY) {
+  console.error('⚠️ VITE_OPENROUTER_API_KEY is not set. Please add it to your .env file.');
+}
 
 export interface AIQuestion {
   question: string;
