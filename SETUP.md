@@ -146,6 +146,7 @@ If you want to deploy the app to GitHub Pages:
    - Check the **Actions** tab to monitor deployment progress
 
    **Option B: Manual Deployment**
+   - First, ensure you have a `.env` file with your API key (see Step 2A above)
    - Build the project locally:
      ```bash
      npm run build
@@ -154,6 +155,7 @@ If you want to deploy the app to GitHub Pages:
      ```bash
      npm run deploy
      ```
+   - Note: The API key from your local `.env` will be embedded in the build
 
 6. **Enable GitHub Pages** (if not already enabled)
    - Go to Settings → Pages
@@ -181,9 +183,14 @@ The API key is used in `src/lib/aiService.ts`:
 
 ```typescript
 const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || '';
+
+// Validate API key on module load
+if (!OPENROUTER_API_KEY) {
+  console.error('⚠️ VITE_OPENROUTER_API_KEY is not set. Please add it to your .env file.');
+}
 ```
 
-This line reads the API key from the environment variables at build time.
+This code reads the API key from the environment variables at build time and validates that it's present.
 
 ### During Build
 
