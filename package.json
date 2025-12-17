@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "AI-powered practice test generator with intelligent question parsing",
-  "homepage": "https://kinshukkush.github.io/PARSE-N-PRACTICE",
+  "homepage": "https://parse-n-practice.vercel.app",
   "type": "module",
   "scripts": {
     "dev": "vite",
