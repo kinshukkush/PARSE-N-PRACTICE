@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     {/* Removed TooltipProvider, Toaster, Sonner */}
-      <BrowserRouter basename="/PARSE-N-PRACTICE">
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/test" element={<Test />} />
